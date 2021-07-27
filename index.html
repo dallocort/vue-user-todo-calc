@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Vue Basics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
+          rel="stylesheet"/>
+    <link href="styles.css" rel="stylesheet"/>
+    <script defer src="https://unpkg.com/vue@next"></script>
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <section id="userForm">
+        <header>USER FORM</header>
+        <form @submit.prevent>
+            <label for="firstName">first name:</label>
+            <input :readonly="formLocked" id="firstName" name="firstName"
+                   type="text" v-model="firstName"/>
+            <br>
+            <label for="lastName">last name:</label>
+            <input :readonly="formLocked" id="lastName" name="lastName"
+                   type="text" v-model="lastName"/>
+            <br>
+            <label for="password">password:</label>
+            <input :readonly="formLocked" id="password" name="password"
+                   type="password" v-model="password"/>
+            <br>
+            <label for="rePassword">repeat password:</label>
+            <input :class="{redBorder:password!==repeatPassword}"
+                   :readonly="formLocked" id="rePassword" name="rePassword"
+                   type="password" v-model="repeatPassword"/>
+            <br>
+            <template v-if="showErrorMessage">
+                <p class="errorMessage" v-for="msg in errorMessages">{{msg}}</p>
+            </template>
+            <button @click="clearForm">CLEAR DATA</button>
+            <button :disabled="formLocked" @click="showFormViewFunction"
+                    type="submit">SUBMIT
+            </button>
+        </form>
+        <aside>
+            <section id="formView" v-if="showFormView">
+                <h4>{{firstName}}.{{lastName}}</h4>
+                <p>(firstname.lastname)</p>
+                <h4>{{password}}</h4>
+                <p :class="passwordStrength">{{passwordStrength}}</p>
+            </section>
+        </aside>
+    </section>
+    <!--    &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+    <!--    &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+    <!--    &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+    <!--    &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+    <section id="todo">
+        <header>TO DO LIST</header>
+        <div id="todoFlex">
+            <input @keyup.enter="addTask" id="addTask" type="text"
+                   v-model="enteredTask"/>
+            <button @click="addTask" type="button">ADD TASK</button>
+            <br>
+            <br>
+            <br>
+            <br>
+            <section v-if="taskList.length===0">Task List is empty</section>
+            <section v-if="taskList.length>0">
+                <article :class="{'line-through':task.done}"
+                         :key="Math.random()" @click="makeDone(task)"
+                         v-for="task in sortedTaskList()">
+                    <p> {{task.index}}. {{task.value}} </p>
+                    <button :style="{display:task.done?'none':'inline'}"
+                            @click.stop="deleteTask(task)">DELETE TASK
+                    </button>
+                </article>
+            </section>
+        </div>
+    </section>
+    <section id="calculator">
+        <header>CALCULATOR</header>
+        <input :value="enteredValue" readonly/>
+        <br>
+        <br>
+        <div id="centered">
+            <div id="clear">
+                <button @click="clear">C</button>
+            </div>
+            <div id="absolute">
+                <button @click="addOperator('')" id="makeResult">=</button>
+                <button @click="addOperator('-')">-</button>
+                <button @click="addOperator('+')">+</button>
+                <button @click="addOperator('/')">/</button>
+                <button @click="addOperator('*')">*</button>
+            </div>
+            <button @click="addNumber(num)" v-for="num in 9">{{num}}</button>
+            <button @click="addNumber(0)">0</button>
+        </div>
+    </section>
+</body>
+</html>
